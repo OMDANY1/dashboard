@@ -1,0 +1,33 @@
+{
+  "name": "portfolio-admin-dashboard",
+  "version": "1.0.0",
+  "description": "Admin dashboard for portfolio website content management",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "init-db": "node init-memory-db.js"
+  },
+  "keywords": [
+    "portfolio",
+    "admin",
+    "dashboard",
+    "content-management"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "canvas": "^3.1.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongodb-memory-server": "^9.1.1",
+    "mongoose": "^7.5.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

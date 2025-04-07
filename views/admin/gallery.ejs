@@ -1,0 +1,84 @@
+<%- include('layout', { title: title, body: `
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Image Gallery</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a href="/admin/projects" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Projects
+    </a>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        Upload New Image
+      </div>
+      <div class="card-body">
+        <form id="image-upload-form" action="/api/uploads/upload" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="image" class="form-label">Select Image</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            <div class="form-text">Recommended size: 800x600px. Max file size: 5MB.</div>
+          </div>
+          
+          <div id="drop-zone" class="border border-dashed p-5 text-center mb-3">
+            <i class="bi bi-cloud-upload fs-1"></i>
+            <p>Drag and drop image here</p>
+          </div>
+          
+          <div id="image-preview"></div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+            <button type="submit" class="btn btn-primary">Upload Image</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Tips
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Image Upload Guidelines</h5>
+        <ul class="card-text">
+          <li>Use high-quality images for best presentation</li>
+          <li>Optimize images for web to reduce file size</li>
+          <li>Maintain consistent aspect ratios across projects</li>
+          <li>Use descriptive filenames</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Image Gallery</h2>
+<div class="row" id="image-gallery">
+  <div class="col-12">
+    <div class="text-center p-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading images...</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  #drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  #drop-zone.highlight {
+    border-color: #2470dc;
+    background-color: rgba(36, 112, 220, 0.1);
+  }
+</style>
+
+<script src="/js/upload-handler.js"></script>
+` }) %>

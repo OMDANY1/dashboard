@@ -1,0 +1,232 @@
+<%- include('layout', { title: title, body: `
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Project Form</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a href="/admin/projects" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Projects
+    </a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <%= isNew ? 'Add New Project' : 'Edit Project' %>
+      </div>
+      <div class="card-body">
+        <form action="<%= isNew ? '/api/projects/create' : '/api/projects/update' %>" method="POST" enctype="multipart/form-data">
+          <% if (!isNew) { %>
+            <input type="hidden" name="id" value="<%= project.id %>">
+          <% } %>
+          
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= project ? project.title : '' %>" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+              <option value="" disabled <%= !project ? 'selected' : '' %>>Select a category</option>
+              <option value="Branding" <%= project && project.category === 'Branding' ? 'selected' : '' %>>Branding</option>
+              <option value="Web Design" <%= project && project.category === 'Web Design' ? 'selected' : '' %>>Web Design</option>
+              <option value="UI/UX" <%= project && project.category === 'UI/UX' ? 'selected' : '' %>>UI/UX</option>
+              <option value="Illustration" <%= project && project.category === 'Illustration' ? 'selected' : '' %>>Illustration</option>
+              <option value="Marketing" <%= project && project.category === 'Marketing' ? 'selected' : '' %>>Marketing</option>
+              <option value="Packaging" <%= project && project.category === 'Packaging' ? 'selected' : '' %>>Packaging</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="client" class="form-label">Client</label>
+            <input type="text" class="form-control" id="client" name="client" value="<%= project ? project.client : '' %>" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating (1-5)</label>
+            <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" step="0.1" value="<%= project ? project.rating : '4.5' %>" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="description" class="form-label">Short Description</label>
+            <input type="text" class="form-control" id="description" name="description" value="<%= project ? project.description : '' %>" required>
+            <div class="form-text">Brief description for project cards (max 100 characters)</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="fullDescription" class="form-label">Full Description</label>
+            <textarea class="form-control" id="fullDescription" name="fullDescription" rows="5" required><%= project ? project.fullDescription : '' %></textarea>
+            <div class="form-text">Detailed description for project detail page</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="image" class="form-label">Project Image</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*" <%= isNew && !project.image ? 'required' : '' %>>
+            <div class="form-text">Recommended size: 800x600px. Max file size: 5MB.</div>
+            
+            <% if (project && project.image) { %>
+              <div class="mt-2">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="flex-shrink-0">
+                        <img src="<%= project.image %>" alt="Current image" class="img-thumbnail" style="max-width: 100px;">
+                      </div>
+                      <div class="flex-grow-1 ms-3">
+                        <p class="mb-0">Current image: <code><%= project.image %></code></p>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="keepImage" name="keepImage" value="true" checked>
+                          <label class="form-check-label" for="keepImage">
+                            Keep current image if no new image is uploaded
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+            
+            <div class="mt-2">
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                <i class="bi bi-images"></i> Select from Gallery
+              </button>
+            </div>
+          </div>
+          
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="isFeatured" name="isFeatured" value="true" <%= project && project.isFeatured ? 'checked' : '' %>>
+            <label class="form-check-label" for="isFeatured">Featured Project (appears on homepage)</label>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/admin/projects" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Tips
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Creating Great Projects</h5>
+        <ul class="card-text">
+          <li>Use high-quality images for best presentation</li>
+          <li>Keep descriptions clear and concise</li>
+          <li>Include relevant details about the project</li>
+          <li>Categorize projects accurately</li>
+          <li>Feature your best work on the homepage</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Gallery Modal -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="galleryModalLabel">Image Gallery</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="galleryImages">
+          <!-- Gallery images will be loaded here -->
+          <div class="col-12 text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading gallery images...</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load gallery images when modal is opened
+  document.getElementById('galleryModal').addEventListener('show.bs.modal', function () {
+    const galleryContainer = document.getElementById('galleryImages');
+    
+    // Fetch images from the server
+    fetch('/api/uploads/list')
+      .then(response => response.json())
+      .then(data => {
+        if (data.images && data.images.length > 0) {
+          let html = '';
+          
+          data.images.forEach(image => {
+            html += `
+              <div class="col-md-3 mb-3">
+                <div class="card">
+                  <img src="${image.path}" class="card-img-top" alt="${image.name}">
+                  <div class="card-body">
+                    <h5 class="card-title">${image.name}</h5>
+                    <button type="button" class="btn btn-sm btn-primary select-image" data-image-path="${image.path}">
+                      Select
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          
+          galleryContainer.innerHTML = html;
+          
+          // Add event listeners to select buttons
+          document.querySelectorAll('.select-image').forEach(button => {
+            button.addEventListener('click', function() {
+              const imagePath = this.getAttribute('data-image-path');
+              document.getElementById('image').value = '';
+              
+              // Create a hidden input to store the selected image path
+              let hiddenInput = document.getElementById('selectedImagePath');
+              if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.id = 'selectedImagePath';
+                hiddenInput.name = 'selectedImagePath';
+                document.querySelector('form').appendChild(hiddenInput);
+              }
+              
+              hiddenInput.value = imagePath;
+              
+              // Show selected image info
+              const imagePreview = document.createElement('div');
+              imagePreview.className = 'mt-2 alert alert-success';
+              imagePreview.innerHTML = `Selected image: <strong>${imagePath}</strong>`;
+              
+              const existingPreview = document.querySelector('.alert-success');
+              if (existingPreview) {
+                existingPreview.remove();
+              }
+              
+              document.getElementById('image').parentNode.appendChild(imagePreview);
+              
+              // Close the modal
+              const modal = bootstrap.Modal.getInstance(document.getElementById('galleryModal'));
+              modal.hide();
+            });
+          });
+        } else {
+          galleryContainer.innerHTML = '<div class="col-12 text-center"><p>No images found in gallery. Upload some images first.</p></div>';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading gallery images:', error);
+        galleryContainer.innerHTML = '<div class="col-12 text-center"><p>Error loading gallery images. Please try again.</p></div>';
+      });
+  });
+</script>
+` }) %>
