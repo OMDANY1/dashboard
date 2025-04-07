@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "init-db": "node init-memory-db.js"
+    "init-db": "node init-memory-db.js",
+    "init-atlas-db": "node init-atlas-db.js"
   },
   "keywords": [
     "portfolio",
